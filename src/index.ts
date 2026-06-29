@@ -1,6 +1,4 @@
-import { PrismaClient } from "../generated/prisma/client.js";
-
-const prisma = new PrismaClient();
+import { prisma } from "../lib/prisma.js";
 
 async function main() {
   const post = await prisma.post.create({
