@@ -5,20 +5,25 @@ async function main() {
   const findAllPosts = await prisma.post.findMany();
   const findFirstPost = await prisma.post.findFirstOrThrow(
     {
-        where: {
+      where: {
         id: 2
-    }
+      }
     }
   );
 
   const findUniquePost = await prisma.post.findUniqueOrThrow(
     {
-        where: {
+      where: {
         id: 2
-        }
+      },
+      select:{
+        title: true,
+        content: true,
+        published: true
+      }
     }
   )
-//   console.log(findAllPosts);
+  //   console.log(findAllPosts);
   console.log(findUniquePost);
 }
 
