@@ -63,32 +63,53 @@ const relationalQueries = async () => {
 
 
 //And /OR Filtering
+// const result = await prisma.post.findMany({
+//     where: {
+//         AND:[
+            
+//             {
+//                 title:{
+//                     contains: "Post"
+//                 }
+//             },
+//             {published: true}
+                
+//         ], 
+//         OR:[
+//             {
+//                 postCategories: {
+//                     some: {
+//                         categoryId: 1
+//                     }
+//                 }
+//             },
+//             {
+//                 published: true
+//             }
+//         ]
+//     }
+// })
+
+
+// NOT filtering
 const result = await prisma.post.findMany({
     where: {
-        AND:[
-            
+        NOT: [
             {
-                title:{
-                    contains: "Post"
-                }
+                published: true
             },
-            {published: true}
-                
-        ], 
-        OR:[
             {
                 postCategories: {
                     some: {
                         categoryId: 1
                     }
                 }
-            },
-            {
-                published: true
             }
         ]
     }
 })
+
+
 console.log(`Relational queries executed successfully`, result);
 }
 
