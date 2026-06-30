@@ -19,7 +19,7 @@ model User {
   username String? @unique
   role   Role    @default(USER)
   posts Post[]
-  profile Profile?
+  profile Profile? // one-to-one relationship with Profile
 
   @@map("users")
 }
@@ -32,7 +32,7 @@ enum Role {
 model Profile {
   id     Int    @id @default(autoincrement())
   bio    String?
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id]) // one-to-one relationship with User
   userId Int    @unique
 
   @@map("profiles")
@@ -43,20 +43,30 @@ model Post {
   title      String
   content    String?
   published  Boolean  @default(false)
-  author     User?    @relation(fields: [authorId], references: [id])
+  author     User?    @relation(fields: [authorId], references: [id]) // here relationship is  -- one-to-many with User model
   authorId   Int?
-  category   category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?
+  postCategories PostCategory[] 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@map("posts")
 }
 
-model category{
+model Category{
   id Int @id @default(autoincrement())
   name String
-  posts Post[]
+  description String?
+  postCategories PostCategory[]
 
   @@map("categories")
+}
+
+model PostCategory {
+  postId     Int
+  categoryId Int
+  post       Post     @relation(fields: [postId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([postId, categoryId])
+  @@map("post_categories")
 }

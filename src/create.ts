@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import { Role } from "./generated/prisma/edge.js";
 
 async function main() {
 //   const createManyPosts = await prisma.post.createMany({
@@ -104,30 +105,107 @@ async function main() {
 
 //   console.log(`Created ${createManyPosts.count} posts`);
 
-const createManyUsers = await prisma.user.createMany({
-    data: [
-        {
-            name: "John Doe",
-            email: "john7.doe@example.com"
-        },
-        {
-            name: "Jane Smith",
-            email: "jane5.smith@example.com"
-        },
-        {
-            name: "Alice Johnson",
-            email: "alice2.johnson@example.com"
-        },
-        {
-            name: "Bob Brown",
-            email: "bob3.brown@example.com"
-        }
-        
-    ]
-});
+// const createManyUsers = await prisma.user.createMany({
+//     data: [
+//         {
+//             name: "Md Shah Jalal",
+//             email: "shah.jalal.ju.bd@gmail.com",
+//             username: "shahjalal",
+//             role: Role.ADMIN
+//         },
+//         {
+//             name: "John Doe",
+//             email: "john.doe@example.com",
+//             username: "johndoe",
+//             role: Role.USER
+//         },
+//         {
+//             name: "Jane Smith",
+//             email: "jane.smith@example.com",
+//             username: "janesmith",
+//             role: Role.USER
+//         }
+//     ]
+// });
 
-console.log(`Created ${createManyUsers.count} users`);
-}
+// console.log(`Created ${createManyUsers.count} users`);
+
+// const creatManyProfiles = await prisma.profile.createMany({
+//     data: [
+//         {
+//             bio: "This is my bio",
+//             userId: 1
+//         },
+//         {
+//             bio: "This is my bio",
+//             userId: 2
+//         },
+//         {
+//             bio: "This is my bio",
+//             userId: 3
+//         }
+//     ]
+// });
+
+// console.log(`Created ${creatManyProfiles.count} profiles`);
+
+
+// const createManyCategories = await prisma.category.createMany({
+//     data: [
+//         {
+//             name: "Technology",
+//             description: "All about technology"
+//         },
+//         {
+//             name: "Science",
+//             description: "All about science"
+//         },
+//         {
+//             name: "Health",
+//             description: "All about health"
+//         }
+//     ]
+// });
+
+// console.log(`Created ${createManyCategories.count} categories`);
+
+
+const [post1, post2, post3] = await Promise.all([
+  prisma.post.create({
+    data: {
+      title: "Post 1",
+      content: "This is my first post",
+      published: true,
+      authorId: 1,
+      postCategories: {
+        create: [
+          { category: { connect: { id: 1 } } },
+          { category: { connect: { id: 2 } } },
+        ],
+      },
+    },
+  }),
+  prisma.post.create({
+    data: {
+      title: "Post 2",
+      content: "This is my second post",
+      published: true,
+      authorId: 2,
+    },
+  }),
+  prisma.post.create({
+    data: {
+      title: "Post 3",
+      content: "This is my third post",
+      published: false,
+      authorId: 3,
+    },
+  }),
+]);
+
+console.log(`Created ${post1.id}, ${post2.id}, and ${post3.id} posts`);
+
+};
 
 main()
   .catch((e) => {
