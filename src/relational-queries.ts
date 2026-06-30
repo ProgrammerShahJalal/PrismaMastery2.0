@@ -39,28 +39,57 @@ const relationalQueries = async () => {
 
 // who's posts are published, show his/her name, email, username and bio
 
-const result = await prisma.user.findMany({
+// const result = await prisma.user.findMany({
+//     where: {
+//         posts: {
+//             some: {
+//                 published: true
+//             }
+//         }
+//     },
+//     select: {
+//         name: true,
+//         email: true,
+//         username: true,
+//         profile: {
+//             select: {
+//                 bio: true
+//             }
+//         }
+//     }
+// });
+
+// console.log(`Relational queries executed successfully`, result);
+
+
+//And /OR Filtering
+const result = await prisma.post.findMany({
     where: {
-        posts: {
-            some: {
+        AND:[
+            
+            {
+                title:{
+                    contains: "Post"
+                }
+            },
+            {published: true}
+                
+        ], 
+        OR:[
+            {
+                postCategories: {
+                    some: {
+                        categoryId: 1
+                    }
+                }
+            },
+            {
                 published: true
             }
-        }
-    },
-    select: {
-        name: true,
-        email: true,
-        username: true,
-        profile: {
-            select: {
-                bio: true
-            }
-        }
+        ]
     }
-});
-
+})
 console.log(`Relational queries executed successfully`, result);
-
 }
 
 
